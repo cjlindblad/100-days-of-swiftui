@@ -11,6 +11,20 @@ enum Unit: String {
     case seconds, minutes, hours, days
 }
 
+struct ViewTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle)
+            .foregroundStyle(.blue)
+    }
+}
+
+extension View {
+    func viewTitle() -> some View {
+        modifier(ViewTitle())
+    }
+}
+
 struct ContentView: View {
     let units: [Unit] = [.seconds, .minutes, .hours, .days]
     @State private var selectedFromUnit: Unit = .seconds
@@ -41,6 +55,8 @@ struct ContentView: View {
     }
     
     var body: some View {
+        Text("UNIT CONVERTER 🤠")
+            .viewTitle()
         Form {
             Section("Convert from") {
                 Picker("Convert from", selection: $selectedFromUnit) {

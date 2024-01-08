@@ -41,7 +41,7 @@ struct ContentView: View {
                 }
                 Section("How much tip do you want to leave?") {
                     Picker("Tip percentage", selection: $tipPercentage) {
-                        ForEach(1..<101, id: \.self) {
+                        ForEach(0..<101, id: \.self) {
                             Text($0, format: .percent)
                         }
                     }
@@ -60,6 +60,7 @@ struct ContentView: View {
                 }
                 Section("Total amount") {
                     Text(grandTotal, format: .currency(code: currencyCode))
+                        .foregroundStyle(tipPercentage == 0 ? .red : .primary)
                 }
             }
             .navigationTitle("WeSplit")
