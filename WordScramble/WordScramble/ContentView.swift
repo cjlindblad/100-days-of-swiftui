@@ -11,12 +11,17 @@ struct ContentView: View {
     @State private var usedWords: [String] = []
     @State private var rootWord = ""
     @State private var newWord = ""
+    @State private var score = 0
     
     @State private var errorTitle = ""
     @State private var errorMessage = ""
     @State private var showingError = false
     
     func startGame() {
+        usedWords = []
+        newWord = ""
+        score = 0
+        
         if let startWordsURL = Bundle.main.url(forResource: "start", withExtension: "txt") {
             if let startWords = try? String(contentsOf: startWordsURL) {
                 let allWords = startWords.components(separatedBy: "\n")
@@ -50,6 +55,18 @@ struct ContentView: View {
             wordError(title: "Word not recognized", message: "You can't just make them up, you know!")
             return
         }
+        
+        guard answer.count >= 3 else {
+            wordError(title: "Word too short", message: "You have to use at least 3 letters!")
+            return
+        }
+        
+        guard answer != rootWord else {
+            wordError(title: "Come on", message: "You can't just use the original word!")
+            return
+        }
+        
+        score += answer.count
         
         withAnimation {
             usedWords.insert(answer, at: 0)
@@ -108,6 +125,16 @@ struct ContentView: View {
                 }
             }
             .navigationTitle(rootWord)
+            .toolbar {
+                ToolbarItem(placement: .navigationBarLeading) {
+                    Text("Score: \(score)")
+                }
+                ToolbarItem(placement: .navigationBarTrailing) {
+                    Button("Restart") {
+                        startGame()
+                    }
+                }
+            }
         }
         .onSubmit {
             addNewWord()
