@@ -26,6 +26,7 @@ struct ContentView: View {
     @State private var scoreTitle = ""
     @State private var score = 0
     @State private var round = 1
+    @State private var tappedFlagIndex = -1
     let maxRound = 8
     
     var body: some View {
@@ -54,10 +55,14 @@ struct ContentView: View {
                     
                     ForEach(0..<3) { index in
                         Button {
+                            withAnimation {
+                                tappedFlagIndex = index
+                            }
                             flagTapped(index)
                         } label: {
                             FlagImage(country: countries[index])
                         }
+                        .rotationEffect(.degrees(tappedFlagIndex == index ? 360 : 0))
                     }
                 }
                 .frame(maxWidth: .infinity)
